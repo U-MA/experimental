@@ -83,6 +83,7 @@ int main(int argc, char **argv)
                 (*visited.rbegin())->is_good_ = false; // 一度選ばれなくする
                 continue;
             }
+
             // Backpropagation
             for (unsigned int j=0; j < visited.size(); j++) {
                 visited[j]->CountUp();
