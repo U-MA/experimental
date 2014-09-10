@@ -86,10 +86,7 @@ int main(int argc, char **argv)
 
             // Backpropagation
             for (unsigned int j=0; j < visited.size(); j++) {
-                visited[j]->CountUp();
-                if (visited[j]->AveValue() > cost) {
-                    visited[j]->SetAveValue(cost);
-                }
+                visited[j]->Update(cost);
             }
         }
 
