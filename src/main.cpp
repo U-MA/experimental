@@ -27,10 +27,10 @@ int main(int argc, char **argv)
     const int    simulation_count = atoi(argv[5]);
 
     cout << problem_name     << ", "
-         << mcts_count       << ", "
-         << ucb_coef         << ", "
-         << threshold        << ", " 
-         << simulation_count << ", ";
+        << mcts_count       << ", "
+        << ucb_coef         << ", "
+        << threshold        << ", " 
+        << simulation_count << ", ";
 
     init_genrand(2014);
 
@@ -60,8 +60,8 @@ int main(int argc, char **argv)
                 for (unsigned int j=0; j <= host_vrp.CustomerSize(); j++)
                 {
                     if (!solution_copy.IsVisit(j) &&
-                        (solution_copy.CurrentVehicle()->Capacity() + host_vrp.Demand(j) <=
-                        host_vrp.Capacity()))
+                            (solution_copy.CurrentVehicle()->Capacity() + host_vrp.Demand(j) <=
+                             host_vrp.Capacity()))
                         node->CreateChild(j);
                 }
                 if (solution_copy.CurrentVehicleId()+1 < host_vrp.VehicleSize())
@@ -80,12 +80,12 @@ int main(int argc, char **argv)
 
             // 実行可能解が得られなかった
             if (cost == 0) {
-		    (*visited.rbegin())->is_good_ = false; // 一度選ばれなくする
-		    continue;
-	    }
+                (*visited.rbegin())->is_good_ = false; // 一度選ばれなくする
+                continue;
+            }
             // Backpropagation
             for (unsigned int j=0; j < visited.size(); j++) {
-		visited[j]->CountUp();
+                visited[j]->CountUp();
                 if (visited[j]->AveValue() > cost) {
                     visited[j]->SetAveValue(cost);
                 }
@@ -105,8 +105,8 @@ int main(int argc, char **argv)
             }
         }
         if (next == NULL) {
-                fprintf(stderr, "next is NULL\n");
-                return 1;
+            fprintf(stderr, "next is NULL\n");
+            return 1;
         }
         SolutionHelper::Transition(solution, host_vrp, next->CustomerId());
     }
