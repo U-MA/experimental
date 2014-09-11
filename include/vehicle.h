@@ -23,6 +23,13 @@ public:
 
     void Print() const;
 
+    iterator begin() { return route_; }
+    iterator end()   { return &route_[route_length_]; }
+    const_iterator cbegin() const
+    { return route_; }
+    const_iterator cend() const
+    { return route_[route_length_]; }
+
 private:
     static const int kMaxSize = 130;
 
