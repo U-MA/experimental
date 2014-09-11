@@ -6,6 +6,9 @@
 class Vehicle
 {
 public:
+    typedef int *       iterator;
+    typedef const int * const_iterator;
+
     Vehicle(void) : route_(), route_length_(0), capacity_(0), is_visit_()
     {
         for (int i=0; i < kMaxSize; i++)
