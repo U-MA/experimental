@@ -28,10 +28,10 @@ int main(int argc, char **argv)
     const int    simulation_count = atoi(argv[5]);
 
     cout << problem_name     << ", "
-        << mcts_count       << ", "
-        << ucb_coef         << ", "
-        << threshold        << ", " 
-        << simulation_count << ", ";
+         << mcts_count       << ", "
+         << ucb_coef         << ", "
+         << threshold        << ", " 
+         << simulation_count << ", ";
 
     init_genrand(2014);
 
