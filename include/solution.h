@@ -1,8 +1,11 @@
 #ifndef VRPSOLVER_CPP_SOLUTION_H
 #define VRPSOLVER_CPP_SOLUTION_H
 
+#include <vector>
+
 #include "base_vrp.h"
 #include "vehicle.h"
+#include "mct_node.h"
 
 class Solution
 {
@@ -50,6 +53,11 @@ public:
 
     /* 配送ルートを出力 */
     void Print() const;
+
+    /* visitedを見て行き、最初に出現した異なる顧客を返す
+     * 引数のvisitedを全て見たときには、第３引数にtrue
+     * そうでないときはfalseが入る */
+    bool find_diff_cus(const std::vector<MctNode*>& visited, int *next) const;
 
 private:
     static const int kMaxVehicleSize = 20;
