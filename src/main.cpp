@@ -74,7 +74,7 @@ int main(int argc, char **argv)
                 // 先行シミュレーションが可能
                 if (sd_list) {
                     int next;
-                    if (sd_list[i].find_diff_cus(visited, &next)) {
+                    if (sd_list->find_diff_cus(visited, &next)) {
                         for (int i=0; i < node->ChildSize(); ++i) {
                             if (node->Child(i)->CustomerId() == next) {
                                 node->Child(i)->Update(sd_list->ComputeTotalCost(host_vrp));
@@ -116,9 +116,6 @@ int main(int argc, char **argv)
             }
         }
 
-        // sd_listの解放
-        if (sd_list) free(sd_list);
-
         double min_ave_value = 1000000;
         MctNode *next = NULL;
 
@@ -139,7 +136,7 @@ int main(int argc, char **argv)
     }
     clock_t stop = clock();
 
-    free(sd_list);
+    if (sd_list) free(sd_list);
 
     int cost;
     if (solution.IsFeasible())
