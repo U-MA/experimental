@@ -14,7 +14,7 @@ static double CalcUcb(MctNode *parent, MctNode *child, double coef)
         return 100000 + (rand() % 100000);
 
     return -child->AveValue() +
-           coef * sqrt(log(parent->Count()) / child->Count());
+        coef * sqrt(log(parent->Count()) / child->Count());
 }
 
 MctNode *Selector::Ucb(MctNode& root, std::vector<MctNode *>& visited, double coef)
@@ -46,7 +46,7 @@ static double CalcUcbMinus(MctNode *parent, MctNode *child, const double coef)
         return - 100000 - (rand() % 100000);
 
     return child->AveValue() -
-           coef * sqrt(log(parent->Count()) / child->Count());
+        coef * sqrt(log(parent->Count()) / child->Count());
 }
 
 MctNode *Selector::UcbMinus(MctNode& root, std::vector<MctNode *>& visited, const double coef)
@@ -59,11 +59,11 @@ MctNode *Selector::UcbMinus(MctNode& root, std::vector<MctNode *>& visited, cons
         double min_ucb = INF;
         for (unsigned int i=0; i < node->ChildSize(); i++)
         {
-	    // 一度飛ばす
-	    if (!node->Child(i)->is_good_) {
-		    node->Child(i)->is_good_ = true;
-		    continue;
-	    }
+            // 一度飛ばす
+            if (!node->Child(i)->is_good_) {
+                node->Child(i)->is_good_ = true;
+                continue;
+            }
 
             double ucb = CalcUcbMinus(node, node->Child(i), coef);
             if (ucb < min_ucb)
