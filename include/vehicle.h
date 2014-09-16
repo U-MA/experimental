@@ -28,7 +28,7 @@ public:
     const_iterator cbegin() const
     { return route_; }
     const_iterator cend() const
-    { return route_[route_length_]; }
+    { return &route_[route_length_]; }
 
 private:
     static const int kMaxSize = 130;
