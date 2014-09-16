@@ -15,6 +15,7 @@
 using namespace std;
 
 void usage(char *exe_name);
+void node_dump(MctNode &root);
 
 int main(int argc, char **argv)
 {
@@ -156,4 +157,32 @@ void usage(char *exe_name)
         << " <problem_file_path> <mcts_count> <ucb_coef> <threshold> <simulation_count>"
         << endl;
     exit(0);
+}
+
+void node_dump_impl(MctNode *node, int level);
+
+void node_dump(MctNode &root) {
+    node_dump_impl(&root, 0);
+}
+
+void node_dump_impl(MctNode *node, int level)
+{
+    char tab[50] = {};
+    for (int i=0; i < level*2; ++i) {
+        tab[i] = ' ';
+    }
+
+    printf("%snode_id: ", tab);
+    if (level == 0) { // root
+        printf("ROOT\n");
+    } else {          // others
+        printf("%d\n", node->CustomerId());
+    }
+    printf("%snum_childs: %d\n", tab, node->ChildSize());
+    if (node->ChildSize() != 0) {
+        printf("%schild:\n", tab);
+        for (int i=0; i < node->ChildSize(); ++i) {
+            node_dump_impl(node->Child(i), level+1);
+        }
+    }
 }
