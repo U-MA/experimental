@@ -37,6 +37,8 @@ int main(int argc, char **argv)
     HostVrp  host_vrp(problem_name);
     Solution solution(host_vrp);
 
+    Solution *sd_list = 0; // とりあえず１要素
+
     clock_t start = clock();
     while (!solution.IsFinish())
     {
@@ -67,6 +69,21 @@ int main(int argc, char **argv)
                 if (solution_copy.CurrentVehicleId()+1 < host_vrp.VehicleSize())
                     node->CreateChild(0);
 
+                // sd_listによる先行シミュレーション
+                // sd_listの各要素とsolution_copyを比較.solution_copyの要素を全て調べきれば
+                // 先行シミュレーションが可能
+                if (sd_list) {
+                    int next;
+                    if (sd_list[i].find_diff_cus(visited, &next)) {
+                        for (int i=0; i < node->ChildSize(); ++i) {
+                            if (node->Child(i)->CustomerId() == next) {
+                                node->Child(i)->Update(sd_list->ComputeTotalCost(host_vrp));
+                                break;
+                            }
+                        }
+                    }
+                }
+
                 visited.pop_back();
                 node = Selector::UcbMinus(*node, visited, ucb_coef);
 
@@ -84,11 +101,23 @@ int main(int argc, char **argv)
                 continue;
             }
 
+            // sd_listへの登録
+            // insert here
+            if (!sd_list) {
+                sd_list = (Solution *)malloc(sizeof(Solution));
+                solution_copy.Copy(*sd_list);
+            } else if (cost < sd_list->ComputeTotalCost(host_vrp)) {
+                solution_copy.Copy(*sd_list);
+            }
+
             // Backpropagation
             for (unsigned int j=0; j < visited.size(); j++) {
                 visited[j]->Update(cost);
             }
         }
+
+        // sd_listの解放
+        if (sd_list) free(sd_list);
 
         double min_ave_value = 1000000;
         MctNode *next = NULL;
@@ -109,6 +138,8 @@ int main(int argc, char **argv)
         SolutionHelper::Transition(solution, host_vrp, next->CustomerId());
     }
     clock_t stop = clock();
+
+    free(sd_list);
 
     int cost;
     if (solution.IsFeasible())
