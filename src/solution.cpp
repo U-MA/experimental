@@ -73,3 +73,24 @@ void Solution::Print() const
     for (unsigned int i=0; i <= current_vehicle_id_; i++)
         vehicles_[i].Print();
 }
+
+bool Solution::find_diff_cus(const std::vector<MctNode*>& visited, int *next) const
+{
+    int j=0;
+    for (int i=0; i < vehicle_size_; ++i) {
+        const Vehicle *vhcl = &vehicles_[i];
+        for (Vehicle::const_iterator c = vhcl->cbegin();
+             c != vhcl->cend(); ++c) {
+            if (*c != visited[j]->CustomerId()) {
+                return false;
+            }
+            ++j;
+            if (j == visited.size()) { // visitedの最後まで探索した
+                if (++c == vhcl->cend()) *next = 0;
+                else *next = *(++c);
+                return true;
+            }
+        }
+    }
+    return false;
+}
