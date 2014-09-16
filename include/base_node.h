@@ -1,9 +1,6 @@
 #ifndef VRPSOLVER_CPP_BASE_NODE_H
 #define VRPSOLVER_CPP_BASE_NODE_H
 
-#include "base_vrp.h"
-#include "solution.h"
-
 class BaseNode
 {
 public:
