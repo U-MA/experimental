@@ -43,12 +43,6 @@ int main(int argc, char **argv)
     const int    threshold        = atoi(argv[4]);
     const int    simulation_count = atoi(argv[5]);
 
-    cout << problem_name     << ", "
-         << mcts_count       << ", "
-         << ucb_coef         << ", "
-         << threshold        << ", " 
-         << simulation_count << ", ";
-
     init_genrand(2014);
 
     HostVrp  host_vrp(problem_name);
@@ -152,10 +146,14 @@ int main(int argc, char **argv)
     else
         cost = 10000;
 
-    // *** seconds
-    cout << (double)(stop - start) / CLOCKS_PER_SEC << ", ";
-    //solution.Print();
-    cout << cost << endl;
+
+    cout << problem_name     << ", "
+         << mcts_count       << ", "
+         << ucb_coef         << ", "
+         << threshold        << ", " 
+         << simulation_count << ", ";
+         << (double)(stop - start) / CLOCKS_PER_SEC << ", ";
+         << cost << endl;
 }
 
 void usage(char *exe_name)
