@@ -33,7 +33,8 @@ create_childs(const BaseVrp& vrp, Solution& sol, MctNode* node)
         node->CreateChild(0);
 }
 
-int main(int argc, char **argv)
+int
+main(int argc, char **argv)
 {
     if (argc != 6) usage(argv[0]);
 
@@ -156,7 +157,8 @@ int main(int argc, char **argv)
          << cost << endl;
 }
 
-void usage(char *exe_name)
+void
+usage(char *exe_name)
 {
     cout << "Usage: " << exe_name
         << " <problem_file_path> <mcts_count> <ucb_coef> <threshold> <simulation_count>"
