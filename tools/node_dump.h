@@ -16,21 +16,21 @@ namespace VrpSolver {
         namespace detail {
             void node_dump_impl(MctNode *node, int level)
             {
-                char tab[50] = {};
-                for (int i=0; i < level*2; ++i) {
+                char tab[80] = {};
+                for (int i=0; i < 4*level; ++i) {
                     tab[i] = ' ';
                 }
 
-                printf("%snode_id: ", tab);
+                printf("%snode_id:", tab);
                 if (level == 0) { // root
                     printf("ROOT\n");
                 } else {          // others
                     printf("%d\n", node->CustomerId());
-                    printf("%scount: %d\n", tab, node->Count());
                 }
-                printf("%snum_childs: %d\n", tab, node->ChildSize());
+                printf("%s  count:%3d,", tab, node->Count());
+                printf("num_childs:%3d\n", node->ChildSize());
                 if (node->ChildSize() != 0) {
-                    printf("%schild:\n", tab);
+                    printf("%s  child:\n", tab);
                     for (int i=0; i < node->ChildSize(); ++i) {
                         node_dump_impl(node->Child(i), level+1);
                     }
