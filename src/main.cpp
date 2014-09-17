@@ -109,9 +109,9 @@ int main(int argc, char **argv)
             // insert here
             if (!sd_list) {
                 sd_list = (Solution *)malloc(sizeof(Solution));
-                solution_copy.Copy(*sd_list);
+                *sd_list = solution_copy;
             } else if (cost < sd_list->ComputeTotalCost(host_vrp)) {
-                solution_copy.Copy(*sd_list);
+                *sd_list = solution_copy;
             }
 
             // Backpropagation
