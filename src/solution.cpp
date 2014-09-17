@@ -64,9 +64,10 @@ void Solution::Print() const
         vehicles_[i].Print();
 }
 
+// visitedの１番目はrootのため使用しない
 bool Solution::find_diff_cus(const std::vector<MctNode*>& visited, int *next) const
 {
-    int j=0;
+    int j=1;
     for (int i=0; i < vehicle_size_; ++i) {
         const Vehicle *vhcl = &vehicles_[i];
         for (Vehicle::const_iterator c = vhcl->cbegin();
@@ -78,6 +79,7 @@ bool Solution::find_diff_cus(const std::vector<MctNode*>& visited, int *next) co
             if (j == visited.size()) { // visitedの最後まで探索した
                 if (++c == vhcl->cend()) *next = 0;
                 else *next = *(++c);
+                printf("Solution::find_diff_cus returns true\n");
                 return true;
             }
         }
