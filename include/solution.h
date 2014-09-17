@@ -10,6 +10,7 @@
 class Solution
 {
 public:
+    // constractors
     Solution() : vehicles_(),
                  current_vehicle_id_(0),
                  customer_size_(0),
@@ -20,7 +21,32 @@ public:
                                    customer_size_(vrp.CustomerSize()),
                                    vehicle_size_(vrp.VehicleSize()) {}
 
+    // copy constractor
+    Solution(const Solution& sol)
+        : vehicles_(),
+          current_vehicle_id_(sol.current_vehicle_id_),
+          customer_size_(sol.customer_size_),
+          vehicle_size_(sol.vehicle_size_)
+    {
+        for (int i=0; i < kMaxVehicleSize; ++i)
+            vehicles_[i] = sol.vehicles_[i];
+    }
+
+    // operator
+    Solution& operator=(const Solution& sol)
+    {
+        for (int i=0; i < kMaxVehicleSize; ++i)
+            vehicles_[i] = sol.vehicles_[i];
+
+        current_vehicle_id_ = sol.current_vehicle_id_;
+        customer_size_      = sol.customer_size_;
+        vehicle_size_       = sol.vehicle_size_;
+    }
+
+
+    // functions
     void Copy(Solution& solution_copy) const;
+
 
     /* 現在走行している車両を取得
      * privateなメンバ変数へのポインタを返すので
