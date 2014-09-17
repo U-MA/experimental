@@ -34,6 +34,18 @@ create_childs(const BaseVrp& vrp, Solution& sol, MctNode* node)
         node->CreateChild(0);
 }
 
+// rootを根とするモンテカルロ木をUCB値に従い探索
+// 訪問したノードはvisitedに格納される
+MctNode*
+traverse_tree(MctNode& root, const BaseVrp& vrp, double ucb_coef, 
+              Solution& solution, vector<MctNode*>& visited)
+{
+    MctNode* node = Selector::UcbMinus(root, visited, ucb_coef);
+    for (unsigned int j=1; j < visited.size(); ++j)
+        SolutionHelper::Transition(solution, vrp, visited[j]->CustomerId());
+    return node;
+}
+
 int
 main(int argc, char **argv)
 {
@@ -62,13 +74,9 @@ main(int argc, char **argv)
             // backpropagationのため、訪問したノードを記憶
             vector<MctNode *> visited;
 
-            // Selector
-            MctNode *node = Selector::UcbMinus(root, visited, ucb_coef);
-
             Solution solution_copy = solution;
 
-            for (unsigned int j=1; j < visited.size(); j++)
-                SolutionHelper::Transition(solution_copy, host_vrp, visited[j]->CustomerId());
+            MctNode* node = traverse_tree(root, host_vrp, ucb_coef, solution_copy, visited);
 
             // Expansion
             if (!solution_copy.IsFinish() && (node->Count() >= threshold))
