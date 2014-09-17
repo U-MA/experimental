@@ -26,7 +26,7 @@ create_childs(const BaseVrp& vrp, Solution& sol, MctNode* node)
            (sol.CurrentVehicle()->Capacity() + vrp.Demand(j) <= vrp.Capacity()))
             node->CreateChild(j);
     }
-    if (sol.CurrentVehicleId()+1 < vrp.VehicleSize())
+    if (node->ChildSize() == 0 && sol.CurrentVehicleId()+1 < vrp.VehicleSize())
         node->CreateChild(0);
 }
 
