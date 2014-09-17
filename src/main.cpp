@@ -63,8 +63,7 @@ int main(int argc, char **argv)
             // Selector
             MctNode *node = Selector::UcbMinus(root, visited, ucb_coef);
 
-            Solution solution_copy;
-            solution.Copy(solution_copy);
+            Solution solution_copy = solution;
 
             for (unsigned int j=1; j < visited.size(); j++)
                 SolutionHelper::Transition(solution_copy, host_vrp, visited[j]->CustomerId());
