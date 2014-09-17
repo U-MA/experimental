@@ -1,6 +1,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <vector>
+#include <stack>
 
 #include <limits.h>
 
@@ -12,7 +13,7 @@
 #include "solution.h"
 #include "solution_helper.h"
 
-#ifdef DEBUG
+#ifdef VRPDEBUG
 #include "node_dump.h" // for debug
 #endif
 
@@ -57,6 +58,7 @@ main(int argc, char **argv)
         MctNode root(0);
         for (int i=0; i < mcts_count; i++)
         {
+            // backpropagationのため、訪問したノードを記憶
             vector<MctNode *> visited;
 
             // Selector
@@ -152,8 +154,8 @@ main(int argc, char **argv)
          << mcts_count       << ", "
          << ucb_coef         << ", "
          << threshold        << ", " 
-         << simulation_count << ", ";
-         << (double)(stop - start) / CLOCKS_PER_SEC << ", ";
+         << simulation_count << ", "
+         << (double)(stop - start) / CLOCKS_PER_SEC << ", "
          << cost << endl;
 }
 
