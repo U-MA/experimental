@@ -56,6 +56,7 @@ main(int argc, char **argv)
     while (!solution.IsFinish())
     {
         MctNode root(0);
+        create_childs(host_vrp, solution, &root);
         for (int i=0; i < mcts_count; i++)
         {
             // backpropagationのため、訪問したノードを記憶
