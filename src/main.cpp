@@ -11,7 +11,10 @@
 #include "simulator.h"
 #include "solution.h"
 #include "solution_helper.h"
+
+#ifdef DEBUG
 #include "node_dump.h" // for debug
+#endif
 
 
 using namespace std;
@@ -138,7 +141,6 @@ int main(int argc, char **argv)
             return 1;
         }
         SolutionHelper::Transition(solution, host_vrp, next->CustomerId());
-        VrpSolver::tools::node_dump(root); exit(0);
     }
     clock_t stop = clock();
 
