@@ -17,6 +17,18 @@ using namespace std;
 void usage(char *exe_name);
 void node_dump(MctNode &root);
 
+void
+create_childs(const BaseVrp& vrp, Solution& sol, MctNode* node)
+{
+    for (unsigned int j=0; j <= vrp.CustomerSize(); j++) {
+        if (!sol.IsVisit(j) &&
+           (sol.CurrentVehicle()->Capacity() + vrp.Demand(j) <= vrp.Capacity()))
+            node->CreateChild(j);
+    }
+    if (sol.CurrentVehicleId()+1 < vrp.VehicleSize())
+        node->CreateChild(0);
+}
+
 int main(int argc, char **argv)
 {
     if (argc != 6) usage(argv[0]);
@@ -60,15 +72,7 @@ int main(int argc, char **argv)
             // Expansion
             if (!solution_copy.IsFinish() && (node->Count() >= threshold))
             {
-                for (unsigned int j=0; j <= host_vrp.CustomerSize(); j++)
-                {
-                    if (!solution_copy.IsVisit(j) &&
-                            (solution_copy.CurrentVehicle()->Capacity() + host_vrp.Demand(j) <=
-                             host_vrp.Capacity()))
-                        node->CreateChild(j);
-                }
-                if (solution_copy.CurrentVehicleId()+1 < host_vrp.VehicleSize())
-                    node->CreateChild(0);
+                create_childs(host_vrp, solution_copy, node);
 
                 // sd_listによる先行シミュレーション
                 // sd_listの各要素とsolution_copyを比較.solution_copyの要素を全て調べきれば
@@ -134,6 +138,7 @@ int main(int argc, char **argv)
             return 1;
         }
         SolutionHelper::Transition(solution, host_vrp, next->CustomerId());
+        node_dump(root); exit(0);
     }
     clock_t stop = clock();
 
@@ -177,6 +182,7 @@ void node_dump_impl(MctNode *node, int level)
         printf("ROOT\n");
     } else {          // others
         printf("%d\n", node->CustomerId());
+        printf("%scount: %d\n", tab, node->Count());
     }
     printf("%snum_childs: %d\n", tab, node->ChildSize());
     if (node->ChildSize() != 0) {
