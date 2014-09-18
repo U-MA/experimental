@@ -46,29 +46,20 @@ traverse_tree(MctNode& root, const BaseVrp& vrp, double ucb_coef,
     return node;
 }
 
-struct mcts_param {
-    char* name_;
-    int   mcts_count_;
-    double ucb_coef_;
-    int threshold_;
-    int sim_count_;
-
-    mcts_param(int argc, char **argv) :
-        name_(argv[1]), mcts_count_(atoi(argv[2])),
-        ucb_coef_(atof(argv[3])), threshold_(atoi(argv[4])),
-        sim_count_(atoi(argv[5])) {}
-};
-
 int
 main(int argc, char **argv)
 {
     if (argc != 6) usage(argv[0]);
 
-    mcts_param param(argc, argv);
+    const char*  problem_name     = argv[1];
+    const int    mcts_count       = atoi(argv[2]);
+    const double ucb_coef         = atof(argv[3]);
+    const int    threshold        = atoi(argv[4]);
+    const int    simulation_count = atoi(argv[5]);
 
     init_genrand(2014);
 
-    HostVrp  host_vrp(param.name_);
+    HostVrp  host_vrp(problem_name);
     Solution solution(host_vrp);
 
     Solution *sd_list = 0; // とりあえず１要素
@@ -78,17 +69,17 @@ main(int argc, char **argv)
     {
         MctNode root(0);
         create_childs(host_vrp, solution, &root);
-        for (int i=0; i < param.mcts_count_; i++)
+        for (int i=0; i < mcts_count; i++)
         {
             // backpropagationのため、訪問したノードを記憶
             vector<MctNode *> visited;
 
             Solution solution_copy = solution;
 
-            MctNode* node = traverse_tree(root, host_vrp, param.ucb_coef_, solution_copy, visited);
+            MctNode* node = traverse_tree(root, host_vrp, ucb_coef, solution_copy, visited);
 
             // Expansion
-            if (!solution_copy.IsFinish() && (node->Count() >= param.threshold_))
+            if (!solution_copy.IsFinish() && (node->Count() >= threshold))
             {
                 create_childs(host_vrp, solution_copy, node);
 
@@ -108,7 +99,7 @@ main(int argc, char **argv)
                 }
 
                 visited.pop_back();
-                node = Selector::UcbMinus(*node, visited, param.ucb_coef_);
+                node = Selector::UcbMinus(*node, visited, ucb_coef);
 
                 int move = (*visited.rbegin())->CustomerId();
                 SolutionHelper::Transition(solution_copy, host_vrp, move);
@@ -116,7 +107,7 @@ main(int argc, char **argv)
 
             // Simulation
             Simulator simulator;
-            unsigned int cost = simulator.sequentialRandomSimulation(host_vrp, solution_copy, param.sim_count_);
+            unsigned int cost = simulator.sequentialRandomSimulation(host_vrp, solution_copy, simulation_count);
 
             // 実行可能解が得られなかった
             if (cost == 0) {
@@ -168,11 +159,11 @@ main(int argc, char **argv)
         cost = 10000;
 
 
-    cout << param.name_       << ", "
-         << param.mcts_count_ << ", "
-         << param.ucb_coef_   << ", "
-         << param.threshold_  << ", " 
-         << param.sim_count_  << ", "
+    cout << problem_name     << ", "
+         << mcts_count       << ", "
+         << ucb_coef         << ", "
+         << threshold        << ", " 
+         << simulation_count << ", "
          << (double)(stop - start) / CLOCKS_PER_SEC << ", "
          << cost << endl;
 }
