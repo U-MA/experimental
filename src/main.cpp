@@ -49,7 +49,8 @@ traverse_tree(MctNode& root, const BaseVrp& vrp, double ucb_coef,
 int
 main(int argc, char **argv)
 {
-    if (argc != 6) usage(argv[0]);
+    if (argc != 6)
+        usage(argv[0]);
 
     const char*  problem_name     = argv[1];
     const int    mcts_count       = atoi(argv[2]);
