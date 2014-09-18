@@ -62,8 +62,7 @@ struct mcts_param {
 int
 main(int argc, char **argv)
 {
-    if (argc != 6)
-        usage(argv[0]);
+    if (argc != 6) usage(argv[0]);
 
     mcts_param param(argc, argv);
 
