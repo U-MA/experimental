@@ -56,7 +56,6 @@ MctNode*
 Selector::UcbMinus(MctNode& root, std::vector<MctNode *>& visited, const double coef)
 {
     MctNode *node = &root;
-    visited.push_back(node);
     while (!node->IsLeaf())
     {
         unsigned int next = 0;

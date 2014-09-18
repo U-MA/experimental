@@ -41,7 +41,7 @@ traverse_tree(MctNode& root, const BaseVrp& vrp, double ucb_coef,
               Solution& solution, vector<MctNode*>& visited)
 {
     MctNode* node = Selector::UcbMinus(root, visited, ucb_coef);
-    for (unsigned int j=1; j < visited.size(); ++j)
+    for (unsigned int j=0; j < visited.size(); ++j)
         SolutionHelper::Transition(solution, vrp, visited[j]->CustomerId());
     return node;
 }
@@ -69,6 +69,7 @@ main(int argc, char **argv)
     while (!solution.IsFinish())
     {
         MctNode root(0);
+        root.CountUp();
         create_childs(host_vrp, solution, &root);
         for (int i=0; i < mcts_count; i++)
         {
@@ -99,7 +100,6 @@ main(int argc, char **argv)
                     }
                 }
 
-                visited.pop_back();
                 node = Selector::UcbMinus(*node, visited, ucb_coef);
 
                 int move = (*visited.rbegin())->CustomerId();
@@ -129,6 +129,7 @@ main(int argc, char **argv)
             for (unsigned int j=0; j < visited.size(); j++) {
                 visited[j]->Update(cost);
             }
+
         }
 
         double min_ave_value = 1000000;
