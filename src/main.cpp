@@ -129,6 +129,7 @@ main(int argc, char **argv)
             for (unsigned int j=0; j < visited.size(); j++) {
                 visited[j]->Update(cost);
             }
+            root.CountUp();
 
         }
 
