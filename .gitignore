@@ -1,3 +1,9 @@
 a.out
 
-compile_debug.sh
+clust*
+
+serial.*
+batch.*
+result*
+csv*
+hobby*
