@@ -49,7 +49,7 @@ static double CalcUcbMinus(MctNode *parent, MctNode *child, const double coef)
         coef * sqrt(log(parent->Count()) / child->Count());
 }
 
-MctNode *Selector::UcbMinus(MctNode& root, std::vector<MctNode *>& visited, const double coef)
+MctNode *Selector::UcbMinus(MctNode& root, std::vector<MctNode *>& visited, int mcts_count, const double coef)
 {
     MctNode *node = &root;
     visited.push_back(node);
@@ -59,9 +59,12 @@ MctNode *Selector::UcbMinus(MctNode& root, std::vector<MctNode *>& visited, cons
         double min_ucb = INF;
         for (unsigned int i=0; i < node->ChildSize(); i++)
         {
-            // 一度飛ばす
             if (!node->Child(i)->is_good_) {
-                node->Child(i)->is_good_ = true;
+                if (node->Child(i)->miss_count() > mcts_count * 0.04) {// 二度と選ばれない. 0.04 is a magic
+                    continue;
+                }
+
+                node->Child(i)->is_good_ = true; // １度選ばれなくする
                 continue;
             }
 

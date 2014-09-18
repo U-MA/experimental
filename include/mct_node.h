@@ -12,7 +12,8 @@ public:
                 child_size_(),
                 count_(0),
                 customer_id_(customer_id),
-                ave_value_(1000000.0)
+                ave_value_(1000000.0),
+                miss_cnt_(0)
     {
         if (customer_id < 0) customer_id_ = 0;
     }
@@ -35,6 +36,16 @@ public:
     bool IsLeaf() const;
     void Update(double value);
 
+    void miss()
+    {
+        miss_cnt_++;
+    }
+
+    int miss_count() const
+    {
+        return miss_cnt_;
+    }
+
     bool is_good_;
 
 private:
@@ -45,6 +56,7 @@ private:
     unsigned long count_; // fix int->long; 2014.06.03
     unsigned int customer_id_;
     double ave_value_;
+    int miss_cnt_;
 };
 
 #endif /* VRPSOLVER_CPP_MCT_NODE_H */

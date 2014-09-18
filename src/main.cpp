@@ -37,10 +37,10 @@ create_childs(const BaseVrp& vrp, Solution& sol, MctNode* node)
 // rootを根とするモンテカルロ木をUCB値に従い探索
 // 訪問したノードはvisitedに格納される
 MctNode*
-traverse_tree(MctNode& root, const BaseVrp& vrp, double ucb_coef, 
+traverse_tree(MctNode& root, const BaseVrp& vrp, int mcts_count, double ucb_coef,
               Solution& solution, vector<MctNode*>& visited)
 {
-    MctNode* node = Selector::UcbMinus(root, visited, ucb_coef);
+    MctNode* node = Selector::UcbMinus(root, visited, mcts_count, ucb_coef);
     for (unsigned int j=1; j < visited.size(); ++j)
         SolutionHelper::Transition(solution, vrp, visited[j]->CustomerId());
     return node;
@@ -77,7 +77,7 @@ main(int argc, char **argv)
 
             Solution solution_copy = solution;
 
-            MctNode* node = traverse_tree(root, host_vrp, ucb_coef, solution_copy, visited);
+            MctNode* node = traverse_tree(root, host_vrp, mcts_count, ucb_coef, solution_copy, visited);
 
             // Expansion
             if (!solution_copy.IsFinish() && (node->Count() >= threshold))
@@ -100,7 +100,7 @@ main(int argc, char **argv)
                 }
 
                 visited.pop_back();
-                node = Selector::UcbMinus(*node, visited, ucb_coef);
+                node = Selector::UcbMinus(*node, visited, mcts_count, ucb_coef);
 
                 int move = (*visited.rbegin())->CustomerId();
                 SolutionHelper::Transition(solution_copy, host_vrp, move);
@@ -112,6 +112,7 @@ main(int argc, char **argv)
 
             // 実行可能解が得られなかった
             if (cost == 0) {
+                (*visited.rbegin())->miss(); // miss_countを１つふやす
                 (*visited.rbegin())->is_good_ = false; // 一度選ばれなくする
                 continue;
             }
