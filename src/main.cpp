@@ -67,14 +67,6 @@ main(int argc, char **argv)
 
     mcts_param param(argc, argv);
 
-    /*
-    const char*  problem_name     = argv[1];
-    const int    mcts_count       = atoi(argv[2]);
-    const double ucb_coef         = atof(argv[3]);
-    const int    threshold        = atoi(argv[4]);
-    const int    simulation_count = atoi(argv[5]);
-    */
-
     init_genrand(2014);
 
     HostVrp  host_vrp(param.name_);
