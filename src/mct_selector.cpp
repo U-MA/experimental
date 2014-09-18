@@ -8,7 +8,8 @@
 static const int INF = 10000000;
 
 
-static double CalcUcb(MctNode *parent, MctNode *child, double coef)
+static double
+CalcUcb(MctNode *parent, MctNode *child, double coef)
 {
     if (child->Count() == 0)
         return 100000 + (rand() % 100000);
@@ -17,7 +18,8 @@ static double CalcUcb(MctNode *parent, MctNode *child, double coef)
         coef * sqrt(log(parent->Count()) / child->Count());
 }
 
-MctNode *Selector::Ucb(MctNode& root, std::vector<MctNode *>& visited, double coef)
+MctNode*
+Selector::Ucb(MctNode& root, std::vector<MctNode *>& visited, double coef)
 {
     MctNode *node = &root;
     visited.push_back(node);
@@ -40,7 +42,8 @@ MctNode *Selector::Ucb(MctNode& root, std::vector<MctNode *>& visited, double co
     return node;
 }
 
-static double CalcUcbMinus(MctNode *parent, MctNode *child, const double coef)
+static double
+CalcUcbMinus(MctNode *parent, MctNode *child, const double coef)
 {
     if (child->Count() == 0)
         return - 100000 - (rand() % 100000);
@@ -49,10 +52,10 @@ static double CalcUcbMinus(MctNode *parent, MctNode *child, const double coef)
         coef * sqrt(log(parent->Count()) / child->Count());
 }
 
-MctNode *Selector::UcbMinus(MctNode& root, std::vector<MctNode *>& visited, const double coef)
+MctNode*
+Selector::UcbMinus(MctNode& root, std::vector<MctNode *>& visited, const double coef)
 {
     MctNode *node = &root;
-    visited.push_back(node);
     while (!node->IsLeaf())
     {
         unsigned int next = 0;
