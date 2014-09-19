@@ -64,7 +64,6 @@ void Solution::Print() const
         vehicles_[i].Print();
 }
 
-// visitedの１番目はrootのため使用しない
 bool Solution::find_diff_cus(const std::vector<MctNode*>& visited, int *next) const
 {
     int j=0;
