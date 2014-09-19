@@ -14,7 +14,7 @@
 #include "solution_helper.h"
 
 #ifdef VRPDEBUG
-#include "node_dump.h" // for debug
+#include "node_dump.h"
 #endif
 
 
@@ -63,7 +63,7 @@ main(int argc, char **argv)
     HostVrp  host_vrp(problem_name);
     Solution solution(host_vrp);
 
-    Solution *sd_list = 0; // とりあえず１要素
+    Solution *sd_list = 0;
 
     clock_t start = clock();
     while (!solution.IsFinish())
@@ -117,7 +117,6 @@ main(int argc, char **argv)
             }
 
             // sd_listへの登録
-            // insert here
             if (!sd_list) {
                 sd_list = (Solution *)malloc(sizeof(Solution));
                 *sd_list = solution_copy;
