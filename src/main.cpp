@@ -89,14 +89,15 @@ main(int argc, char **argv)
                 // sd_listの各要素とsolution_copyを比較.solution_copyの要素を全て調べきれば
                 // 先行シミュレーションが可能
                 if (sd_list) {
-                    int next;
-                    if (sd_list->find_diff_cus(visited, &next)) {
-                        for (int i=0; i < node->ChildSize(); ++i) {
-                            if (node->Child(i)->CustomerId() == next) {
-                                node->Child(i)->Update(sd_list->ComputeTotalCost(host_vrp));
-                                break;
-                            }
+                    Solution tmp = solution_copy; // solution_copyを退避
+                    for (int i=0; i < node->ChildSize(); ++i) {
+                        int next = node->Child(i)->CustomerId();
+                        SolutionHelper::Transition(solution_copy, host_vrp, next);
+                        if (sd_list->is_derivative_of(solution_copy)) {
+                            int cost = sd_list->ComputeTotalCost(host_vrp);
+                            node->Child(i)->Update(cost);
                         }
+                        solution_copy = tmp; // solution_copyを復帰
                     }
                 }
 
