@@ -78,11 +78,6 @@ public:
     /* 配送ルートを出力 */
     void Print() const;
 
-    /* visitedを見て行き、最初に出現した異なる顧客を返す
-     * 引数のvisitedを全て見たときには、第３引数にtrue
-     * そうでないときはfalseが入る */
-    bool find_diff_cus(const std::vector<MctNode*>& visited, int *next) const;
-
     /* solutionから*thisに遷移可能であればtrue, そうでなければfalse */
     bool is_derivative_of(const Solution& solution) const;
 
