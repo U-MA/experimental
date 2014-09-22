@@ -50,18 +50,22 @@ unsigned int Simulator::sequentialRandomSimulation(const BaseVrp& vrp, Solution&
         return 0;
 }
 
-unsigned int Simulator::sequentialRandomSimulation(const BaseVrp& vrp, const Solution& solution,
-                                                   unsigned int count)
+unsigned int
+Simulator::sequentialRandomSimulation(const BaseVrp& vrp, Solution& solution, unsigned int count)
 {
     unsigned int min_cost = kInfinity;
+    Solution better_sol;
     for (unsigned int i=0; i < count; i++)
     {
         Solution solution_copy = solution;
         unsigned int cost = sequentialRandomSimulation(vrp, solution_copy);
-        if ((cost != 0) && (cost < min_cost))
+        if ((cost != 0) && (cost < min_cost)) {
+            better_sol = solution_copy;
             min_cost = cost;
+        }
     }
     if (min_cost == kInfinity) return 0;
+    solution = better_sol;
     return min_cost;
 }
 
