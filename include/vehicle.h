@@ -21,6 +21,19 @@ public:
     void Visit(const BaseVrp& vrp, int customer);
     unsigned int ComputeCost(const BaseVrp& vrp) const;
 
+    int get(int i) const
+    {
+        if (i < 0 || i > route_length_)
+            return -1;
+
+        return route_[i];
+    }
+
+    int size() const
+    {
+        return route_length_;
+    }
+
     void Print() const;
 
     iterator begin() { return route_; }
