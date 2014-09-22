@@ -83,6 +83,9 @@ public:
      * そうでないときはfalseが入る */
     bool find_diff_cus(const std::vector<MctNode*>& visited, int *next) const;
 
+    /* solutionから*thisに遷移可能であればtrue, そうでなければfalse */
+    bool is_derivative_of(const Solution& solution) const;
+
 private:
     static const int kMaxVehicleSize = 20;
 

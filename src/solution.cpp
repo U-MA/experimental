@@ -84,3 +84,15 @@ bool Solution::find_diff_cus(const std::vector<MctNode*>& visited, int *next) co
     }
     return false;
 }
+
+bool
+Solution::is_derivative_of(const Solution& sol) const
+{
+    for (int i=0; i < sol.vehicle_size_; ++i) {
+        for (int j=0; j < sol.vehicles_[i].size(); ++j) {
+            if (sol.vehicles_[i].get(j) != vehicles_[i].get(j))
+                return false;
+        }
+    }
+    return true;
+}
