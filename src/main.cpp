@@ -106,7 +106,7 @@ main(int argc, char **argv)
 
             // Simulation
             Simulator simulator;
-            unsigned int cost = simulator.sequentialRandomSimulation(host_vrp, solution_copy, simulation_count);
+            unsigned int cost = simulator.sequential_random_simulation(host_vrp, solution_copy, simulation_count);
 
             // 実行可能解が得られなかった
             if (cost == 0) {

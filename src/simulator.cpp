@@ -9,7 +9,8 @@ extern "C"
 #include "simulator.h"
 
 
-unsigned int Simulator::sequentialRandomSimulation(const BaseVrp& vrp, Solution& solution)
+unsigned int
+Simulator::sequential_random_simulation(const BaseVrp& vrp, Solution& solution)
 {
     Vehicle *current_vehicle = solution.current_vehicle();
     int candidates[200], candidate_size;
@@ -51,14 +52,14 @@ unsigned int Simulator::sequentialRandomSimulation(const BaseVrp& vrp, Solution&
 }
 
 unsigned int
-Simulator::sequentialRandomSimulation(const BaseVrp& vrp, Solution& solution, unsigned int count)
+Simulator::sequential_random_simulation(const BaseVrp& vrp, Solution& solution, unsigned int count)
 {
     unsigned int min_cost = kInfinity;
     Solution better_sol;
     for (unsigned int i=0; i < count; i++)
     {
         Solution solution_copy = solution;
-        unsigned int cost = sequentialRandomSimulation(vrp, solution_copy);
+        unsigned int cost = sequential_random_simulation(vrp, solution_copy);
         if ((cost != 0) && (cost < min_cost)) {
             better_sol = solution_copy;
             min_cost = cost;
@@ -69,7 +70,8 @@ Simulator::sequentialRandomSimulation(const BaseVrp& vrp, Solution& solution, un
     return min_cost;
 }
 
-unsigned int Simulator::random(const BaseVrp& vrp, Solution& solution)
+unsigned int
+Simulator::random(const BaseVrp& vrp, Solution& solution)
 {
     return 10000000;
 }
