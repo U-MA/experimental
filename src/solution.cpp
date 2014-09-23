@@ -2,7 +2,7 @@
 
 #include "solution.h"
 
-Vehicle *Solution::CurrentVehicle()
+Vehicle *Solution::current_vehicle()
 {
     return &vehicles_[current_vehicle_id_];
 }

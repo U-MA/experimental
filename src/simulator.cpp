@@ -11,7 +11,7 @@ extern "C"
 
 unsigned int Simulator::sequentialRandomSimulation(const BaseVrp& vrp, Solution& solution)
 {
-    Vehicle *current_vehicle = solution.CurrentVehicle();
+    Vehicle *current_vehicle = solution.current_vehicle();
     int candidates[200], candidate_size;
 
     while (!solution.IsFinish())
@@ -33,7 +33,7 @@ unsigned int Simulator::sequentialRandomSimulation(const BaseVrp& vrp, Solution&
         {
             /* 候補がいなければ次の車両へ */
             solution.ChangeVehicle();
-            current_vehicle = solution.CurrentVehicle();
+            current_vehicle = solution.current_vehicle();
         }
         else
         {

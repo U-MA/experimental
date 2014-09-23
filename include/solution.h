@@ -49,7 +49,7 @@ public:
     /* 現在走行している車両を取得
      * privateなメンバ変数へのポインタを返すので
      * いい設計とは思えないが、このままでいく */
-    Vehicle *CurrentVehicle();
+    Vehicle *current_vehicle();
 
     /* 現在走行している車両の番号を取得
      * 最初の番号は0 */
