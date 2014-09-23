@@ -20,11 +20,11 @@ Simulator::sequential_random_simulation(const BaseVrp& vrp, Solution& solution)
         candidate_size = 0;
 
         /* 次に訪問する顧客の候補を求める */
-        for (unsigned int i=1; i <= vrp.CustomerSize(); i++)
+        for (unsigned int i=1; i <= vrp.customer_size(); i++)
         {
             /* 訪問可能であれば候補に追加 */
             if (!solution.is_visit(i) &&
-                current_vehicle->capacity() + vrp.Demand(i) <= vrp.Capacity())
+                current_vehicle->capacity() + vrp.demand(i) <= vrp.capacity())
             {
                 candidates[candidate_size++] = i;
             }

@@ -25,12 +25,12 @@ void usage(char *exe_name);
 void
 create_childs(const BaseVrp& vrp, Solution& sol, MctNode* node)
 {
-    for (unsigned int j=0; j <= vrp.CustomerSize(); j++) {
+    for (unsigned int j=0; j <= vrp.customer_size(); j++) {
         if (!sol.is_visit(j) &&
-           (sol.current_vehicle()->capacity() + vrp.Demand(j) <= vrp.Capacity()))
+           (sol.current_vehicle()->capacity() + vrp.demand(j) <= vrp.capacity()))
             node->create_child(j);
     }
-    if (node->child_size() == 0 && sol.current_vehicle_id()+1 < vrp.VehicleSize())
+    if (node->child_size() == 0 && sol.current_vehicle_id()+1 < vrp.vehicle_size())
         node->create_child(0);
 }
 

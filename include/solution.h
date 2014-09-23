@@ -18,8 +18,8 @@ public:
 
     Solution(const BaseVrp& vrp) : vehicles_(),
                                    current_vehicle_id_(0),
-                                   customer_size_(vrp.CustomerSize()),
-                                   vehicle_size_(vrp.VehicleSize()) {}
+                                   customer_size_(vrp.customer_size()),
+                                   vehicle_size_(vrp.vehicle_size()) {}
 
     // copy constractor
     Solution(const Solution& sol)

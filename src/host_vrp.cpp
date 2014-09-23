@@ -14,7 +14,8 @@ HostVrp::HostVrp()
 }
 
 /* filename中のkに続く数字文字列を取り出し、整数値に変換 */
-static int extractVehicleSizeAndToInt(const char *filename)
+static int
+extract_vehicle_size_and_to_int(const char *filename)
 {
     char *k   = strrchr(filename, 'k');
     char *dot = strrchr(filename, '.');
@@ -30,7 +31,7 @@ HostVrp::HostVrp(const char *file_path)
 {
     vrp_ = (vrp_problem *)calloc(1, sizeof(vrp_problem));
     vrp_io(vrp_, file_path);
-    vrp_->numroutes = extractVehicleSizeAndToInt(file_path);
+    vrp_->numroutes = extract_vehicle_size_and_to_int(file_path);
 }
 
 HostVrp::~HostVrp()
@@ -46,13 +47,15 @@ HostVrp::~HostVrp()
 }
 
 
-void HostVrp::Create(const char *file_path)
+void
+HostVrp::create(const char *file_path)
 {
     vrp_io(vrp_, file_path);
-    vrp_->numroutes = extractVehicleSizeAndToInt(file_path);
+    vrp_->numroutes = extract_vehicle_size_and_to_int(file_path);
 }
 
-const char *HostVrp::Name() const
+const char*
+HostVrp::name() const
 {
     const char *aName = vrp_->name;
     return aName;
