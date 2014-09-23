@@ -42,7 +42,7 @@ traverse_tree(MctNode& root, const BaseVrp& vrp, double ucb_coef,
 {
     MctNode* node = Selector::UcbMinus(root, visited, ucb_coef);
     for (unsigned int j=0; j < visited.size(); ++j)
-        SolutionHelper::Transition(solution, vrp, visited[j]->CustomerId());
+        SolutionHelper::transition(solution, vrp, visited[j]->CustomerId());
     return node;
 }
 
@@ -89,7 +89,7 @@ main(int argc, char **argv)
                     Solution tmp = solution_copy; // solution_copyを退避
                     for (int i=0; i < node->ChildSize(); ++i) {
                         int next = node->Child(i)->CustomerId();
-                        SolutionHelper::Transition(solution_copy, host_vrp, next);
+                        SolutionHelper::transition(solution_copy, host_vrp, next);
                         if (sd_list->is_derivative_of(solution_copy)) {
                             int cost = sd_list->compute_total_cost(host_vrp);
                             node->Child(i)->Update(cost);
@@ -101,7 +101,7 @@ main(int argc, char **argv)
                 node = Selector::UcbMinus(*node, visited, ucb_coef);
 
                 int move = (*visited.rbegin())->CustomerId();
-                SolutionHelper::Transition(solution_copy, host_vrp, move);
+                SolutionHelper::transition(solution_copy, host_vrp, move);
             }
 
             // Simulation
@@ -145,7 +145,7 @@ main(int argc, char **argv)
             fprintf(stderr, "next is NULL\n");
             return 1;
         }
-        SolutionHelper::Transition(solution, host_vrp, next->CustomerId());
+        SolutionHelper::transition(solution, host_vrp, next->CustomerId());
     }
     clock_t stop = clock();
 

@@ -6,7 +6,7 @@
 
 namespace SolutionHelper
 {
-    void Transition(Solution &solution, const BaseVrp &vrp, unsigned int move);
+    void transition(Solution &solution, const BaseVrp &vrp, unsigned int move);
 };
 
 #endif /* VRPSOLVER_CPP_SOLUTION_HELPER_H */
