@@ -15,11 +15,11 @@ public:
             is_visit_[i] = false;
     };
 
-    unsigned int Capacity() const { return capacity_; }
-    bool IsVisit(int customer_id) const { return is_visit_[customer_id-1]; }
+    unsigned int capacity() const { return capacity_; }
+    bool is_visit(int customer_id) const { return is_visit_[customer_id-1]; }
 
-    void Visit(const BaseVrp& vrp, int customer);
-    unsigned int ComputeCost(const BaseVrp& vrp) const;
+    void visit(const BaseVrp& vrp, int customer);
+    unsigned int compute_cost(const BaseVrp& vrp) const;
 
     int get(int i) const
     {
@@ -34,7 +34,7 @@ public:
         return route_length_;
     }
 
-    void Print() const;
+    void print() const;
 
     iterator begin() { return route_; }
     iterator end()   { return &route_[route_length_]; }

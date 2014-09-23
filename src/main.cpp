@@ -27,7 +27,7 @@ create_childs(const BaseVrp& vrp, Solution& sol, MctNode* node)
 {
     for (unsigned int j=0; j <= vrp.CustomerSize(); j++) {
         if (!sol.is_visit(j) &&
-           (sol.current_vehicle()->Capacity() + vrp.Demand(j) <= vrp.Capacity()))
+           (sol.current_vehicle()->capacity() + vrp.Demand(j) <= vrp.Capacity()))
             node->CreateChild(j);
     }
     if (node->ChildSize() == 0 && sol.current_vehicle_id()+1 < vrp.VehicleSize())
