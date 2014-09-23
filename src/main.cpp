@@ -85,9 +85,6 @@ main(int argc, char **argv)
             {
                 create_childs(host_vrp, solution_copy, node);
 
-                // sd_listによる先行シミュレーション
-                // sd_listの各要素とsolution_copyを比較.solution_copyの要素を全て調べきれば
-                // 先行シミュレーションが可能
                 if (sd_list) {
                     Solution tmp = solution_copy; // solution_copyを退避
                     for (int i=0; i < node->ChildSize(); ++i) {
@@ -117,7 +114,6 @@ main(int argc, char **argv)
                 continue;
             }
 
-            // sd_listへの登録
             if (!sd_list) {
                 sd_list = (Solution *)malloc(sizeof(Solution));
                 *sd_list = solution_copy;
