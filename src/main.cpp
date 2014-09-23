@@ -40,7 +40,7 @@ MctNode*
 traverse_tree(MctNode& root, const BaseVrp& vrp, double ucb_coef, 
               Solution& solution, vector<MctNode*>& visited)
 {
-    MctNode* node = Selector::UcbMinus(root, visited, ucb_coef);
+    MctNode* node = Selector::ucb_minus(root, visited, ucb_coef);
     for (unsigned int j=0; j < visited.size(); ++j)
         SolutionHelper::transition(solution, vrp, visited[j]->CustomerId());
     return node;
@@ -98,7 +98,7 @@ main(int argc, char **argv)
                     }
                 }
 
-                node = Selector::UcbMinus(*node, visited, ucb_coef);
+                node = Selector::ucb_minus(*node, visited, ucb_coef);
 
                 int move = (*visited.rbegin())->CustomerId();
                 SolutionHelper::transition(solution_copy, host_vrp, move);

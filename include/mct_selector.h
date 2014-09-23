@@ -7,10 +7,10 @@
 
 namespace Selector
 {
-    MctNode *Ucb(MctNode& root, std::vector<MctNode*>& visited,
+    MctNode *ucb(MctNode& root, std::vector<MctNode*>& visited,
                  double coef = 100.0);
 
-    MctNode *UcbMinus(MctNode& root, std::vector<MctNode*>& visited,
+    MctNode *ucb_minus(MctNode& root, std::vector<MctNode*>& visited,
                       const double coef = 100.0);
 }
 
