@@ -14,7 +14,7 @@ unsigned int Simulator::sequentialRandomSimulation(const BaseVrp& vrp, Solution&
     Vehicle *current_vehicle = solution.current_vehicle();
     int candidates[200], candidate_size;
 
-    while (!solution.IsFinish())
+    while (!solution.is_finish())
     {
         candidate_size = 0;
 
@@ -22,7 +22,7 @@ unsigned int Simulator::sequentialRandomSimulation(const BaseVrp& vrp, Solution&
         for (unsigned int i=1; i <= vrp.CustomerSize(); i++)
         {
             /* 訪問可能であれば候補に追加 */
-            if (!solution.IsVisit(i) &&
+            if (!solution.is_visit(i) &&
                 current_vehicle->Capacity() + vrp.Demand(i) <= vrp.Capacity())
             {
                 candidates[candidate_size++] = i;
@@ -32,7 +32,7 @@ unsigned int Simulator::sequentialRandomSimulation(const BaseVrp& vrp, Solution&
         if (candidate_size == 0)
         {
             /* 候補がいなければ次の車両へ */
-            solution.ChangeVehicle();
+            solution.change_vehicle();
             current_vehicle = solution.current_vehicle();
         }
         else
@@ -44,8 +44,8 @@ unsigned int Simulator::sequentialRandomSimulation(const BaseVrp& vrp, Solution&
         }
     }
 
-    if (solution.IsFeasible())
-        return solution.ComputeTotalCost(vrp);
+    if (solution.is_feasible())
+        return solution.compute_total_cost(vrp);
     else
         return 0;
 }

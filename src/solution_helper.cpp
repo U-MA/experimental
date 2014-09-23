@@ -5,5 +5,5 @@ void SolutionHelper::Transition(Solution &solution, const BaseVrp &vrp, unsigned
     if (move != 0)
         solution.current_vehicle()->Visit(vrp, move);
     else
-        solution.ChangeVehicle();
+        solution.change_vehicle();
 }

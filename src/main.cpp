@@ -26,11 +26,11 @@ void
 create_childs(const BaseVrp& vrp, Solution& sol, MctNode* node)
 {
     for (unsigned int j=0; j <= vrp.CustomerSize(); j++) {
-        if (!sol.IsVisit(j) &&
+        if (!sol.is_visit(j) &&
            (sol.current_vehicle()->Capacity() + vrp.Demand(j) <= vrp.Capacity()))
             node->CreateChild(j);
     }
-    if (node->ChildSize() == 0 && sol.CurrentVehicleId()+1 < vrp.VehicleSize())
+    if (node->ChildSize() == 0 && sol.current_vehicle_id()+1 < vrp.VehicleSize())
         node->CreateChild(0);
 }
 
@@ -66,7 +66,7 @@ main(int argc, char **argv)
     Solution *sd_list = 0;
 
     clock_t start = clock();
-    while (!solution.IsFinish())
+    while (!solution.is_finish())
     {
         MctNode root(0);
         root.CountUp();
@@ -81,7 +81,7 @@ main(int argc, char **argv)
             MctNode* node = traverse_tree(root, host_vrp, ucb_coef, solution_copy, visited);
 
             // Expansion
-            if (!solution_copy.IsFinish() && (node->Count() >= threshold))
+            if (!solution_copy.is_finish() && (node->Count() >= threshold))
             {
                 create_childs(host_vrp, solution_copy, node);
 
@@ -91,7 +91,7 @@ main(int argc, char **argv)
                         int next = node->Child(i)->CustomerId();
                         SolutionHelper::Transition(solution_copy, host_vrp, next);
                         if (sd_list->is_derivative_of(solution_copy)) {
-                            int cost = sd_list->ComputeTotalCost(host_vrp);
+                            int cost = sd_list->compute_total_cost(host_vrp);
                             node->Child(i)->Update(cost);
                         }
                         solution_copy = tmp; // solution_copyを復帰
@@ -117,7 +117,7 @@ main(int argc, char **argv)
             if (!sd_list) {
                 sd_list = (Solution *)malloc(sizeof(Solution));
                 *sd_list = solution_copy;
-            } else if (cost < sd_list->ComputeTotalCost(host_vrp)) {
+            } else if (cost < sd_list->compute_total_cost(host_vrp)) {
                 *sd_list = solution_copy;
             }
 
@@ -152,8 +152,8 @@ main(int argc, char **argv)
     if (sd_list) free(sd_list);
 
     int cost;
-    if (solution.IsFeasible())
-        cost = solution.ComputeTotalCost(host_vrp);
+    if (solution.is_feasible())
+        cost = solution.compute_total_cost(host_vrp);
     else
         cost = 10000;
 

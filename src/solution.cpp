@@ -7,12 +7,12 @@ Vehicle *Solution::current_vehicle()
     return &vehicles_[current_vehicle_id_];
 }
 
-void Solution::ChangeVehicle()
+void Solution::change_vehicle()
 {
     ++current_vehicle_id_;
 }
 
-bool Solution::IsFeasible() const
+bool Solution::is_feasible() const
 {
     for (unsigned int i=1; i <= customer_size_; i++)
     {
@@ -27,7 +27,7 @@ bool Solution::IsFeasible() const
     return true;
 }
 
-bool Solution::IsFinish() const
+bool Solution::is_finish() const
 {
     /* 用意されている車両を使いきった */
     /*
@@ -39,10 +39,10 @@ bool Solution::IsFinish() const
     /*
     return IsFeasible();
     */
-    return IsFeasible() || (current_vehicle_id_ >= vehicle_size_);
+    return is_feasible() || (current_vehicle_id_ >= vehicle_size_);
 }
 
-bool Solution::IsVisit(int customer_id) const
+bool Solution::is_visit(int customer_id) const
 {
     for (unsigned int i=0; i <= current_vehicle_id_; i++)
         if (vehicles_[i].IsVisit(customer_id))
@@ -50,7 +50,7 @@ bool Solution::IsVisit(int customer_id) const
     return false;
 }
 
-unsigned int Solution::ComputeTotalCost(const BaseVrp& vrp) const
+unsigned int Solution::compute_total_cost(const BaseVrp& vrp) const
 {
     int total_cost = 0;
     for (unsigned int i=0; i <= current_vehicle_id_; i++)
@@ -58,7 +58,7 @@ unsigned int Solution::ComputeTotalCost(const BaseVrp& vrp) const
     return total_cost;
 }
 
-void Solution::Print() const
+void Solution::print() const
 {
     for (unsigned int i=0; i <= current_vehicle_id_; i++)
         vehicles_[i].Print();

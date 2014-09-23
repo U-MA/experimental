@@ -53,30 +53,30 @@ public:
 
     /* 現在走行している車両の番号を取得
      * 最初の番号は0 */
-    unsigned int CurrentVehicleId() const
+    unsigned int current_vehicle_id() const
     {
         return current_vehicle_id_;
     }
 
     /* 現在走行しているvehicleを変更 */
-    void ChangeVehicle();
+    void change_vehicle();
 
     /* solutionが適切なものであればtrue
      * 例えば全ての顧客を訪問していなければ適切なsolutionでないので
      * falseを返す */
-    bool IsFeasible() const;
+    bool is_feasible() const;
 
     /* 終了状態であればtrue */
-    bool IsFinish() const;
+    bool is_finish() const;
 
     /* customer_idを訪問していればtrue */
-    bool IsVisit(int customer_id) const;
+    bool is_visit(int customer_id) const;
 
     /* 全てのvehicleのコストを返す */
-    unsigned int ComputeTotalCost(const BaseVrp& vrp) const;
+    unsigned int compute_total_cost(const BaseVrp& vrp) const;
 
     /* 配送ルートを出力 */
-    void Print() const;
+    void print() const;
 
     /* solutionから*thisに遷移可能であればtrue, そうでなければfalse */
     bool is_derivative_of(const Solution& solution) const;
