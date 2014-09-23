@@ -19,21 +19,21 @@ public:
 
     ~MctNode();
 
-    MctNode* Child(unsigned int child_id) const;
+    MctNode* child(unsigned int child_id) const;
 
-    unsigned int ChildSize() const { return child_size_; }
+    unsigned int child_size() const { return child_size_; }
 
-    unsigned int Count() const { return count_; }
+    unsigned int count() const { return count_; }
 
-    unsigned int CustomerId() const { return customer_id_; }
-    void CountUp() { count_++; }
+    unsigned int customer_id() const { return customer_id_; }
+    void count_up() { count_++; }
 
-    double AveValue() const { return ave_value_; }
-    void SetAveValue(double value) { ave_value_ = value; }
+    double ave_value() const { return ave_value_; }
+    void set_ave_value(double value) { ave_value_ = value; }
 
-    void CreateChild(unsigned int customer_id);
-    bool IsLeaf() const;
-    void Update(double value);
+    void create_child(unsigned int customer_id);
+    bool is_leaf() const;
+    void update(double value);
 
     bool is_good_;
 

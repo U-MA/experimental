@@ -28,10 +28,10 @@ create_childs(const BaseVrp& vrp, Solution& sol, MctNode* node)
     for (unsigned int j=0; j <= vrp.CustomerSize(); j++) {
         if (!sol.is_visit(j) &&
            (sol.current_vehicle()->capacity() + vrp.Demand(j) <= vrp.Capacity()))
-            node->CreateChild(j);
+            node->create_child(j);
     }
-    if (node->ChildSize() == 0 && sol.current_vehicle_id()+1 < vrp.VehicleSize())
-        node->CreateChild(0);
+    if (node->child_size() == 0 && sol.current_vehicle_id()+1 < vrp.VehicleSize())
+        node->create_child(0);
 }
 
 // rootを根とするモンテカルロ木をUCB値に従い探索
@@ -42,7 +42,7 @@ traverse_tree(MctNode& root, const BaseVrp& vrp, double ucb_coef,
 {
     MctNode* node = Selector::ucb_minus(root, visited, ucb_coef);
     for (unsigned int j=0; j < visited.size(); ++j)
-        SolutionHelper::transition(solution, vrp, visited[j]->CustomerId());
+        SolutionHelper::transition(solution, vrp, visited[j]->customer_id());
     return node;
 }
 
@@ -69,7 +69,7 @@ main(int argc, char **argv)
     while (!solution.is_finish())
     {
         MctNode root(0);
-        root.CountUp();
+        root.count_up();
         create_childs(host_vrp, solution, &root);
         for (int i=0; i < mcts_count; i++)
         {
@@ -81,18 +81,18 @@ main(int argc, char **argv)
             MctNode* node = traverse_tree(root, host_vrp, ucb_coef, solution_copy, visited);
 
             // Expansion
-            if (!solution_copy.is_finish() && (node->Count() >= threshold))
+            if (!solution_copy.is_finish() && (node->count() >= threshold))
             {
                 create_childs(host_vrp, solution_copy, node);
 
                 if (sd_list) {
                     Solution tmp = solution_copy; // solution_copyを退避
-                    for (int i=0; i < node->ChildSize(); ++i) {
-                        int next = node->Child(i)->CustomerId();
+                    for (int i=0; i < node->child_size(); ++i) {
+                        int next = node->child(i)->customer_id();
                         SolutionHelper::transition(solution_copy, host_vrp, next);
                         if (sd_list->is_derivative_of(solution_copy)) {
                             int cost = sd_list->compute_total_cost(host_vrp);
-                            node->Child(i)->Update(cost);
+                            node->child(i)->update(cost);
                         }
                         solution_copy = tmp; // solution_copyを復帰
                     }
@@ -100,7 +100,7 @@ main(int argc, char **argv)
 
                 node = Selector::ucb_minus(*node, visited, ucb_coef);
 
-                int move = (*visited.rbegin())->CustomerId();
+                int move = (*visited.rbegin())->customer_id();
                 SolutionHelper::transition(solution_copy, host_vrp, move);
             }
 
@@ -123,29 +123,29 @@ main(int argc, char **argv)
 
             // Backpropagation
             for (unsigned int j=0; j < visited.size(); j++) {
-                visited[j]->Update(cost);
+                visited[j]->update(cost);
             }
-            root.CountUp();
+            root.count_up();
 
         }
 
         double min_ave_value = 1000000;
         MctNode *next = NULL;
 
-        for (unsigned int i=0; i < root.ChildSize(); i++)
+        for (unsigned int i=0; i < root.child_size(); i++)
         {
-            double ave_value = root.Child(i)->AveValue();
+            double ave_value = root.child(i)->ave_value();
             if ((ave_value >= 1.0) && (ave_value < min_ave_value))
             {
                 min_ave_value = ave_value;
-                next = root.Child(i);
+                next = root.child(i);
             }
         }
         if (next == NULL) {
             fprintf(stderr, "next is NULL\n");
             return 1;
         }
-        SolutionHelper::transition(solution, host_vrp, next->CustomerId());
+        SolutionHelper::transition(solution, host_vrp, next->customer_id());
     }
     clock_t stop = clock();
 

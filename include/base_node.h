@@ -6,12 +6,12 @@ class BaseNode
 public:
     virtual ~BaseNode() {}
 
-    virtual unsigned int ChildSize() const = 0;
-    virtual unsigned int Count() const = 0;
-    virtual double AveValue() const = 0;
+    virtual unsigned int child_size() const = 0;
+    virtual unsigned int count() const = 0;
+    virtual double ave_value() const = 0;
 
-    virtual bool IsLeaf() const = 0;
-    virtual void Update(double value) = 0;
+    virtual bool is_leaf() const = 0;
+    virtual void update(double value) = 0;
 };
 
 #endif /* VRPSOLVER_CPP_BASE_NODE_H */
