@@ -1,6 +1,8 @@
 #ifndef VRPSOLVER_TOOLS_NODE_DUMP
 #define VRPSOLVER_TOOLS_NODE_DUMP
 
+#include "mct_node.h"
+
 namespace VrpSolver {
     namespace tools {
 
@@ -27,15 +29,15 @@ namespace VrpSolver {
                 if (depth == 0) { // root
                     printf("ROOT\n");
                 } else {          // others
-                    printf("%d\n", node->CustomerId());
+                    printf("%d\n", node->customer_id());
                 }
-                printf("%s  count:%3d,", tab, node->Count());
-                printf("num_childs:%3d\n", node->ChildSize());
-                if (node->ChildSize() != 0) {
+                printf("%s  count:%3d,", tab, node->count());
+                printf("num_childs:%3d\n", node->child_size());
+                if (node->child_size() != 0) {
                     if (depth != max_depth) {
                         printf("%s  child:\n", tab);
-                        for (int i=0; i < node->ChildSize(); ++i) {
-                            node_dump_impl(node->Child(i), depth+1, max_depth);
+                        for (int i=0; i < node->child_size(); ++i) {
+                            node_dump_impl(node->child(i), depth+1, max_depth);
                         }
                     }
                 }
