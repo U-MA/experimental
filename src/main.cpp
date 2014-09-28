@@ -11,7 +11,6 @@
 #include "mct_selector.h"
 #include "simulator.h"
 #include "solution.h"
-#include "solution_helper.h"
 
 #ifdef VRPDEBUG
 #include "node_dump.h"
@@ -21,6 +20,15 @@
 using namespace std;
 
 void usage(char *exe_name);
+
+void
+transition(Solution &solution, const BaseVrp &vrp, unsigned int move)
+{
+    if (move != 0)
+        solution.current_vehicle()->visit(vrp, move);
+    else
+        solution.change_vehicle();
+}
 
 void
 create_childs(const BaseVrp& vrp, Solution& sol, MctNode* node)
@@ -42,7 +50,7 @@ traverse_tree(MctNode& root, const BaseVrp& vrp, double ucb_coef,
 {
     MctNode* node = Selector::ucb_minus(root, visited, ucb_coef);
     for (unsigned int j=0; j < visited.size(); ++j)
-        SolutionHelper::transition(solution, vrp, visited[j]->customer_id());
+        transition(solution, vrp, visited[j]->customer_id());
     return node;
 }
 
@@ -89,7 +97,7 @@ main(int argc, char **argv)
                     Solution tmp = solution_copy; // solution_copyを退避
                     for (int i=0; i < node->child_size(); ++i) {
                         int next = node->child(i)->customer_id();
-                        SolutionHelper::transition(solution_copy, host_vrp, next);
+                        transition(solution_copy, host_vrp, next);
                         if (sd_list->is_derivative_of(solution_copy)) {
                             int cost = sd_list->compute_total_cost(host_vrp);
                             node->child(i)->update(cost);
@@ -101,7 +109,7 @@ main(int argc, char **argv)
                 node = Selector::ucb_minus(*node, visited, ucb_coef);
 
                 int move = (*visited.rbegin())->customer_id();
-                SolutionHelper::transition(solution_copy, host_vrp, move);
+                transition(solution_copy, host_vrp, move);
             }
 
             // Simulation
@@ -145,7 +153,7 @@ main(int argc, char **argv)
             fprintf(stderr, "next is NULL\n");
             return 1;
         }
-        SolutionHelper::transition(solution, host_vrp, next->customer_id());
+        transition(solution, host_vrp, next->customer_id());
     }
     clock_t stop = clock();
 
