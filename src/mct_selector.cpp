@@ -3,6 +3,7 @@
 #include <iostream>
 #include <vector>
 
+#include "mct_node.h"
 #include "mct_selector.h"
 
 static const int INF = 10000000;
@@ -50,6 +51,25 @@ calc_ucb_minus(MctNode *parent, MctNode *child, const double coef)
 
     return child->ave_value() -
         coef * sqrt(log(parent->count()) / child->count());
+}
+
+MctNode*
+Selector::ucb_minus(MctNode& node, double coef)
+{
+    double min_ucb = INF;
+    MctNode *next = NULL;
+    for (unsigned int i=0; i < node.child_size(); ++i) {
+        if (!node.child(i)->is_good_) {
+            node.child(i)->is_good_ = true;
+            continue;
+        }
+        double ucb = calc_ucb_minus(&node, node.child(i), coef);
+        if (ucb < min_ucb) {
+            min_ucb = ucb;
+            next = node.child(i);
+        }
+    }
+    return next;
 }
 
 MctNode*

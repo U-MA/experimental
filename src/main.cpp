@@ -8,9 +8,9 @@
 #include "mt19937ar.h"
 #include "host_vrp.h"
 #include "mct_node.h"
+#include "solution.h"
 #include "mct_selector.h"
 #include "simulator.h"
-#include "solution.h"
 
 #ifdef VRPDEBUG
 #include "node_dump.h"
@@ -20,6 +20,10 @@
 using namespace std;
 
 void usage(char *exe_name);
+
+double ucb_coef;
+int    threshold;
+int    simulation_count;
 
 void
 transition(Solution &solution, const BaseVrp &vrp, unsigned int move)
@@ -42,16 +46,40 @@ create_childs(const BaseVrp& vrp, Solution& sol, MctNode* node)
         node->create_child(0);
 }
 
-// rootを根とするモンテカルロ木をUCB値に従い探索
-// 訪問したノードはvisitedに格納される
-MctNode*
-traverse_tree(MctNode& root, const BaseVrp& vrp, double ucb_coef, 
-              Solution& solution, vector<MctNode*>& visited)
+unsigned int
+mct_search(const HostVrp& vrp, Solution& sltn, MctNode& node)
 {
-    MctNode* node = Selector::ucb_minus(root, visited, ucb_coef);
-    for (unsigned int j=0; j < visited.size(); ++j)
-        transition(solution, vrp, visited[j]->customer_id());
-    return node;
+    if (sltn.is_finish()) {
+        unsigned int cost = sltn.compute_total_cost(vrp);
+        node.update(cost);
+        return cost;
+    }
+
+    /* node is NOT a leaf */
+    if (node.child_size() > 0) {
+        /* select next child with ucb */
+        MctNode *next = Selector::ucb_minus(node, ucb_coef);
+        transition(sltn, vrp, next->customer_id());
+        unsigned int cost = mct_search(vrp, sltn, *next);
+        node.update(cost);
+        return cost;
+    }
+
+    /* node is a leaf */
+    if (node.count() >= threshold) {
+        create_childs(vrp, sltn, &node);
+        /* select next child with ucb */
+        MctNode *next = Selector::ucb_minus(node, ucb_coef);
+        transition(sltn, vrp, next->customer_id());
+        unsigned int cost = mct_search(vrp, sltn, *next);
+        node.update(cost);
+        return cost;
+    }
+
+    Simulator simulator;
+    unsigned int cost = simulator.sequential_random_simulation(vrp, sltn, simulation_count);
+    node.update(cost);
+    return cost;
 }
 
 int
@@ -60,18 +88,18 @@ main(int argc, char **argv)
     if (argc != 6)
         usage(argv[0]);
 
-    const char*  problem_name     = argv[1];
-    const int    mcts_count       = atoi(argv[2]);
-    const double ucb_coef         = atof(argv[3]);
-    const int    threshold        = atoi(argv[4]);
-    const int    simulation_count = atoi(argv[5]);
+    const char*  problem_name = argv[1];
+    const int    mcts_count   = atoi(argv[2]);
+
+    /* global variables*/
+    ucb_coef         = atof(argv[3]);
+    threshold        = atoi(argv[4]);
+    simulation_count = atoi(argv[5]);
 
     init_genrand(2014);
 
     HostVrp  host_vrp(problem_name);
     Solution solution(host_vrp);
-
-    Solution *sd_list = 0;
 
     clock_t start = clock();
     while (!solution.is_finish())
@@ -81,60 +109,9 @@ main(int argc, char **argv)
         create_childs(host_vrp, solution, &root);
         for (int i=0; i < mcts_count; i++)
         {
-            // backpropagationのため、訪問したノードを記憶
-            vector<MctNode *> visited;
-
-            Solution solution_copy = solution;
-
-            MctNode* node = traverse_tree(root, host_vrp, ucb_coef, solution_copy, visited);
-
-            // Expansion
-            if (!solution_copy.is_finish() && (node->count() >= threshold))
-            {
-                create_childs(host_vrp, solution_copy, node);
-
-                if (sd_list) {
-                    Solution tmp = solution_copy; // solution_copyを退避
-                    for (int i=0; i < node->child_size(); ++i) {
-                        int next = node->child(i)->customer_id();
-                        transition(solution_copy, host_vrp, next);
-                        if (sd_list->is_derivative_of(solution_copy)) {
-                            int cost = sd_list->compute_total_cost(host_vrp);
-                            node->child(i)->update(cost);
-                        }
-                        solution_copy = tmp; // solution_copyを復帰
-                    }
-                }
-
-                node = Selector::ucb_minus(*node, visited, ucb_coef);
-
-                int move = (*visited.rbegin())->customer_id();
-                transition(solution_copy, host_vrp, move);
-            }
-
-            // Simulation
-            Simulator simulator;
-            unsigned int cost = simulator.sequential_random_simulation(host_vrp, solution_copy, simulation_count);
-
-            // 実行可能解が得られなかった
-            if (cost == 0) {
-                (*visited.rbegin())->is_good_ = false; // 一度選ばれなくする
-                continue;
-            }
-
-            if (!sd_list) {
-                sd_list = (Solution *)malloc(sizeof(Solution));
-                *sd_list = solution_copy;
-            } else if (cost < sd_list->compute_total_cost(host_vrp)) {
-                *sd_list = solution_copy;
-            }
-
-            // Backpropagation
-            for (unsigned int j=0; j < visited.size(); j++) {
-                visited[j]->update(cost);
-            }
-            root.count_up();
-
+            Solution tmp = solution; // solutionを退避
+            static_cast<void>(mct_search(host_vrp, solution, root));
+            solution = tmp; // solutionの復帰
         }
 
         double min_ave_value = 1000000;
@@ -151,13 +128,14 @@ main(int argc, char **argv)
         }
         if (next == NULL) {
             fprintf(stderr, "next is NULL\n");
+            solution.print();
+            printf("root has %u childs\n", root.child_size());
+            printf("child's value is %g\n", root.child(0)->ave_value());
             return 1;
         }
         transition(solution, host_vrp, next->customer_id());
     }
     clock_t stop = clock();
-
-    if (sd_list) free(sd_list);
 
     int cost;
     if (solution.is_feasible())

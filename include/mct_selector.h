@@ -12,6 +12,9 @@ namespace Selector
 
     MctNode *ucb_minus(MctNode& root, std::vector<MctNode*>& visited,
                       const double coef = 100.0);
+
+    MctNode* ucb_minus(MctNode& root, double coef);
+
 }
 
 #endif /* VRPSOLVER_CPP_MCT_SELECTOR_H */
