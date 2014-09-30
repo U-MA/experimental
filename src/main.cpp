@@ -79,7 +79,7 @@ main(int argc, char **argv)
         MctNode root(0);
         root.count_up();
         create_childs(host_vrp, solution, &root);
-        for (int i=0; i < mcts_count; i++)
+        for (int i=1; i < mcts_count; i++)
         {
             // backpropagationのため、訪問したノードを記憶
             vector<MctNode *> visited;
