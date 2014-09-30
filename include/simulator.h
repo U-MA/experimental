@@ -8,14 +8,14 @@
 class Simulator
 {
 public:
-    unsigned int sequential_random_simulation(const BaseVrp& vrp, Solution& solution);
+    static unsigned int sequential_random_simulation(const BaseVrp& vrp, Solution& solution);
 
     /* solutionの状態からシミュレーションをcount回行う
      * その中で最も良いコストを返し、その解をsolutionに格納する */
-    unsigned int sequential_random_simulation(const BaseVrp& vrp, Solution& solution,
+    static unsigned int sequential_random_simulation(const BaseVrp& vrp, Solution& solution,
                                             unsigned int count);
 
-    unsigned int random(const BaseVrp& vrp, Solution& solution);
+    static unsigned int random(const BaseVrp& vrp, Solution& solution);
 
 private:
     static const int kInfinity = 1e6;
