@@ -54,6 +54,27 @@ traverse_tree(MctNode& root, const BaseVrp& vrp, double ucb_coef,
     return node;
 }
 
+bool
+is_twice_of_child(MctNode* root)
+{
+    if (root->child_size() == 1)
+            return true;
+
+    int max = -10000000;
+    int min =  10000000;
+    for (int i=0; i < root->child_size(); ++i) {
+        MctNode* child = root->child(i);
+        if (child->count() > max)
+            max = child->count();
+        if (child->count() < min)
+            min = child->count();
+    }
+    if (max == 0 || min == 0)
+            return false;
+
+    return (static_cast<double>(max) / min >= 2.0);
+}
+
 int
 main(int argc, char **argv)
 {
@@ -79,7 +100,7 @@ main(int argc, char **argv)
         MctNode root(0);
         root.count_up();
         create_childs(host_vrp, solution, &root);
-        for (int i=1; i < mcts_count; i++)
+        while (!is_twice_of_child(&root))
         {
             // backpropagationのため、訪問したノードを記憶
             vector<MctNode *> visited;
